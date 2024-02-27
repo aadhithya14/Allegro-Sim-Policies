@@ -149,22 +149,19 @@ class PinchGraspingSim(DexterityEnv):
     #Set Object Initial Pose
     def set_init_object_pose(self):
         self.object_pose = gymapi.Transform()
-        self.object_pose.p = gymapi.Vec3()
-                                                
+        self.object_pose.p = gymapi.Vec3()                                   
         self.object_pose.p.x =self.actor_pose.p.x
         pose_dy, pose_dz = -0.05, -0.05
-
         self.object_pose.p.y = self.actor_pose.p.y + pose_dy
         self.object_pose.p.z = self.actor_pose.p.z + pose_dz
 
-    #Color the fingers of the Hand
+    #Color the fingers of the Hand to match visual representations with real robot
     def color_hand(self):    
         for j in range(self.num_dofs+13):   
             if j!=20 and j!=15 and j!=10 and j!=5 : 
                 self.gym.set_rigid_body_color(self.env, self.actor_handle,j, gymapi.MESH_VISUAL, gymapi.Vec3(0.15, 0.15, 0.15))
 
-    #Load the asset
-
+    #Load the assets
     def load(self):
         self.camera_handles = []
         self.object_handles=[]
@@ -208,44 +205,6 @@ class PinchGraspingSim(DexterityEnv):
         #Set the control mode
         self.set_control_mode(self.control_mode)
         self.gym.set_actor_dof_properties(self.env, self.actor_handle, self.props) 
-    #Get dof names              
-    def get_dof_names(self):
-        dof_names = self.gym.get_asset_dof_names(self.asset)
-        return dof_names
-
-    #Get Dof properties 
-    def get_dof_properties(self):
-        dof_props = self.gym.get_asset_dof_properties(self.asset)
-        return dof_props
-
-    #Get DOF count
-    def get_dof_count(self):
-        num_dofs = self.gym.get_asset_dof_count(self.asset)
-        return num_dofs
-    
-    # Get DOF States
-    def get_dof_states(self):
-        dof_states = np.zeros(self.num_dofs, dtype=gymapi.DofState.dtype)
-        return dof_states
-    
-    #Get DOF positions
-    def get_dof_positions(self):
-        self.position=np.zeros(self.num_dofs)
-        for i in range(self.num_dofs):
-                self.position[i]=self.gym.get_dof_position(self.env,i)
-        return self.position
-    
-    #Get DOF velocities
-    def get_dof_velocities(self):
-        self.velocity=np.zeros(self.num_dofs)
-        for i in range(self.num_dofs):
-                self.velocity[i]=self.gym.get_dof_velocity(self.env,i)
-        return self.velocity
-    #Get DOF types
-    def get_dof_types(self):
-        dof_types = [self.gym.get_asset_dof_type(self.asset, i) for i in range(self.num_dofs)]
-        return dof_types
-    
     #Create Sim Viewer
     def create_viewer(self):
         viewer = self.gym.create_viewer(self.sim, gymapi.CameraProperties())
@@ -347,57 +306,11 @@ class PinchGraspingSim(DexterityEnv):
                     state[i]=self.gym.get_dof_position(self.env,i)  
                 else:
                     state[i]=self.gym.get_dof_velocity(self.env,i)  
-        return state
-    
-    #Get Hand position
-    def get_dof_position(self):
-        self.state=self.compute_observation(observation='position')[6:]
-        return self.state
-    
-    #Get Arm position
-    def get_arm_position(self):
-        self.state=self.compute_observation(observation='position')[0:6]
-        return self.state
-    
-    #Get Arm Velocity
-    def get_arm_velocity(self):
-        self.state=self.compute_observation(observation='velocity')[0:6]
-        return self.state
-    
-    #Get full position
-    def get_state(self):
-        self.state=self.compute_observation(observation='position')
-        return self.state
-
-    def update_log(self):
-        self.log.add('state', self.get_state().tolist())
-
-    def get_time(self):
-            return self.gym.get_elapsed_time(self.sim)
-
-    #Get Cartesian Position of Table 
-    def get_table_cartesian(self):
-        self.table_handle = self.gym.find_actor_rigid_body_handle(self.env, self.table_handle, "base_link")
-        self.table_pose = self.gym.get_rigid_transform(self.env, self.table_handle)
-        self.table_position = [self.table_pose.p.x, self.table_pose.p.y, self.table_pose.p.z]   
-        return self.table_position
-    
-    #Get Hand effector position
-    def get_cartesian_position(self):
-        self.end_eff_handle = self.gym.find_actor_rigid_body_handle(self.env, self.actor_handle, "kinova_end_effector")
-        self.end_eff_pose = self.gym.get_rigid_transform(self.env, self.end_eff_handle)
-        self.end_eff_position = np.array([self.end_eff_pose.p.x, self.end_eff_pose.p.y, self.end_eff_pose.p.z])
-        self.end_eff_rotation = np.array([self.end_eff_pose.r.x, self.end_eff_pose.r.y, self.end_eff_pose.r.z, self.end_eff_pose.r.w])
-        self.end_eff_pos= np.concatenate((self.end_eff_position,self.end_eff_rotation))
-        return self.end_eff_pos
+        return state   
 
     # Set DOF position
     def set_position(self, position):
         self.gym.set_dof_position_target_tensor(self.sim,  gymtorch.unwrap_tensor(position))
-
-    # Set DOF velocity
-    def set_velocity(self,velocity):
-        self.gym.set_dof_velocity_target_tensor(self.sim,  gymtorch.unwrap_tensor(velocity))
 
     # Control Mode of DOF operation
     def set_control_mode(self,mode=None):

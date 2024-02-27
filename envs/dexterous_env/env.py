@@ -62,12 +62,8 @@ class DexterityEnv(gym.Env):
         self.action_space = spaces.Box(low = np.array([-1]*action_dim,dtype=np.float32), # Actions are 12 + 7
                                         high = np.array([1]*action_dim,dtype=np.float32),
                                         dtype = np.float32)
-        # self.observation_space = spaces.Box(low = np.array([0,0],dtype=np.float32), high = np.array([255,255],dtype=np.float32), dtype = np.float32)
         self.observation_space = spaces.Dict(dict(
             pixels = spaces.Box(low = np.array([0,0],dtype=np.float32), high = np.array([255,255], dtype=np.float32), dtype = np.float32),
-            # tactile = spaces.Box(low = np.array([-1]*tactile_repr_dim, dtype=np.float32),
-            #                          high = np.array([1]*tactile_repr_dim, dtype=np.float32),
-            #                          dtype = np.float32),
             features = spaces.Box(low = np.array([-1]*16, dtype=np.float32),
                                     high = np.array([1]*16, dtype=np.float32),
                                     dtype = np.float32)
@@ -113,9 +109,6 @@ class DexterityEnv(gym.Env):
             img = self.image_transform(image)
             img = torch.FloatTensor(img)
         return img # NOTE: This is for environment
-
-    
-
     def _crop_transform(self, image):
         return crop_transform(image, camera_view=self.view_num)
 
@@ -146,8 +139,6 @@ class DexterityEnv(gym.Env):
             axis=0
         )
 
-        # obs['features'] = np.array(features_dict['allegro']['position'])
-
         obs['pixels'] = self._get_curr_image() # NOTE: Check this - you're returning non normalized things though
         
         sensor_state = self.deploy_api.get_sensor_state()
@@ -172,9 +163,6 @@ class DexterityEnv(gym.Env):
         )
         obs['pixels'] = self._get_curr_image()
         print("Observation", obs)
-        # sensor_state = self.deploy_api.get_sensor_state()
-        # tactile_values = sensor_state['xela']['sensor_values']
-        # obs['tactile'] = self.tactile_repr.get(tactile_values)
         return obs
 
     

@@ -115,16 +115,11 @@ class CubeFlippingSim(DexterityEnv):
 
         self.object_asset_options = gymapi.AssetOptions()
         self.object_asset= self.gym.load_urdf(self.sim, self.asset_root, self.cube_asset,self.object_asset_options)
-        
-        
         self.num_dofs=self.get_dof_count()
-        
         self.cur_targets = torch.zeros((1, self.num_dofs), dtype=torch.float, device='cpu')
         self.prev_targets = torch.zeros((1, self.num_dofs), dtype=torch.float, device='cpu')
         self.actuated_dof_indices = [i for i in range(self.num_dofs)]
-        self.actuated_dof_indices = to_torch(self.actuated_dof_indices, dtype=torch.long, device=self.device)
-        
-        
+        self.actuated_dof_indices = to_torch(self.actuated_dof_indices, dtype=torch.long, device=self.device) 
         # Call Function to create and load the environment              
         self.load()
         self.actor_root_state_tensor = self.gym.acquire_actor_root_state_tensor(self.sim)
@@ -224,72 +219,26 @@ class CubeFlippingSim(DexterityEnv):
         self.object_indices.append(object_idx)                        
         actor_idx = self.gym.get_actor_index(self.env, self.actor_handle, gymapi.DOMAIN_SIM)
         self.actor_indices.append(actor_idx)
-
-        
-        
         body_dict = self.gym.get_actor_rigid_body_dict(self.env, self.actor_handle)
         self.actor_handles.append(self.actor_handle)
-
         self.dof_states = self.gym.get_actor_dof_states(self.env, self.actor_handle, gymapi.STATE_NONE)
-        
         #Set Color for the Hand Urdf coz Urdf is fully white
         self.color_hand()
         #Gets Actor DOF properties
         self.props = self.gym.get_actor_dof_properties(self.env, self.actor_handle)
-        
-
         #Set properties for the hand
         self.props["stiffness"] =[3]*16
         self.props["damping"] =  [0.1]*16
         self.props["friction"] = [0.01]*16
         self.props["armature"] = [0.001]*16
-        
         #Set the control mode
         self.set_control_mode(self.control_mode)
         self.gym.set_actor_dof_properties(self.env, self.actor_handle, self.props) 
 
-
-    #Get dof names              
-    def get_dof_names(self):
-        dof_names = self.gym.get_asset_dof_names(self.asset)
-        return dof_names
-
-    #Get Dof properties 
-    def get_dof_properties(self):
-        dof_props = self.gym.get_asset_dof_properties(self.asset)
-        return dof_props
-
     #Get DOF count
     def get_dof_count(self):
         num_dofs = self.gym.get_asset_dof_count(self.asset)
-        return num_dofs
-    
-
-    # Get DOF States
-    def get_dof_states(self):
-        dof_states = np.zeros(self.num_dofs, dtype=gymapi.DofState.dtype)
-        return dof_states
-    
-
-    #Get DOF positions
-    def get_dof_positions(self):
-        self.position=np.zeros(self.num_dofs)
-        for i in range(self.num_dofs):
-                self.position[i]=self.gym.get_dof_position(self.env,i)
-        return self.position
-    
-    #Get DOF velocities
-    def get_dof_velocities(self):
-        self.velocity=np.zeros(self.num_dofs)
-        for i in range(self.num_dofs):
-                self.velocity[i]=self.gym.get_dof_velocity(self.env,i)
-        return self.velocity
-
-
-    #Get DOF types
-    def get_dof_types(self):
-        dof_types = [self.gym.get_asset_dof_type(self.asset, i) for i in range(self.num_dofs)]
-        return dof_types
+        return num_dofs 
     
     #Create Sim Viewer
     def create_viewer(self):
@@ -301,11 +250,9 @@ class CubeFlippingSim(DexterityEnv):
 
     #Set Object State at the start of each episode                         
     def set_object_state(self):
-        
         self.root_state_tensor[self.object_indices[0],0:3]=to_torch([1,1.3,0.06],dtype=torch.float,device='cpu') #Cube Position 
         self.root_state_tensor[self.object_indices[0],3:7]=to_torch([-1.3,-0.707, 0, 0],dtype=torch.float,device='cpu') #Cube Orientation
 
-    
     # This Function is used for resetting the Environment
     def reset(self):
         self.obs={}
@@ -405,79 +352,28 @@ class CubeFlippingSim(DexterityEnv):
                         else:
                                 state[i]=self.gym.get_dof_velocity(self.env,i)  
 
-
-        
         return state
     
-    #Get Hand position
-    def get_dof_position(self):
-        self.state=self.compute_observation(observation='position')[6:]
-        return self.state
-    
-    #Get Arm position
-    def get_arm_position(self):
-        self.state=self.compute_observation(observation='position')[0:6]
-        return self.state
-    
-    #Get Arm Velocity
-    def get_arm_velocity(self):
-        self.state=self.compute_observation(observation='velocity')[0:6]
-        return self.state
-    
-    #Get full position
-    def get_state(self):
-        self.state=self.compute_observation(observation='position')
-        return self.state
-
-    def update_log(self):
-        self.log.add('state', self.get_state().tolist())
-
-    
-    def get_time(self):
-            return self.gym.get_elapsed_time(self.sim)
-
-    #Get Cartesian Position of Table 
-    def get_table_cartesian(self):
-        self.table_handle = self.gym.find_actor_rigid_body_handle(self.env, self.table_handle, "base_link")
-        self.table_pose = self.gym.get_rigid_transform(self.env, self.table_handle)
-        self.table_position = [self.table_pose.p.x, self.table_pose.p.y, self.table_pose.p.z]   
-        return self.table_position
-    
-
-    #Get Hand effector position
-    def get_cartesian_position(self):
-        self.end_eff_handle = self.gym.find_actor_rigid_body_handle(self.env, self.actor_handle, "kinova_end_effector")
-        self.end_eff_pose = self.gym.get_rigid_transform(self.env, self.end_eff_handle)
-        self.end_eff_position = np.array([self.end_eff_pose.p.x, self.end_eff_pose.p.y, self.end_eff_pose.p.z])
-        self.end_eff_rotation = np.array([self.end_eff_pose.r.x, self.end_eff_pose.r.y, self.end_eff_pose.r.z, self.end_eff_pose.r.w])
-        self.end_eff_pos= np.concatenate((self.end_eff_position,self.end_eff_rotation))
-        return self.end_eff_pos
-
     # Set DOF position
     def set_position(self, position):
         self.gym.set_dof_position_target_tensor(self.sim,  gymtorch.unwrap_tensor(position))
 
-    # Set DOF velocity
-    def set_velocity(self,velocity):
-        self.gym.set_dof_velocity_target_tensor(self.sim,  gymtorch.unwrap_tensor(velocity))
-
-
     # Control Mode of DOF operation
     def set_control_mode(self,mode=None):
         for k in range(self.num_dofs):
-                if mode is not None:
-                        if mode=='Position':
-                                self.props["driveMode"][k] = gymapi.DOF_MODE_POS
-                        elif mode=='Velocity':
-                                self.props["driveMode"][k] = gymapi.DOF_MODE_VEL
-                        elif mode=='Effort':
-                                self.props["driveMode"][k] = gymapi.DOF_MODE_EFFORT
-                        elif mode=='Position_Velocity':
-                            
-                                self.props["driveMode"][k] = gymapi.DOF_MODE_POS   
+            if mode is not None:
+                if mode=='Position':
+                        self.props["driveMode"][k] = gymapi.DOF_MODE_POS
+                elif mode=='Velocity':
+                        self.props["driveMode"][k] = gymapi.DOF_MODE_VEL
+                elif mode=='Effort':
+                        self.props["driveMode"][k] = gymapi.DOF_MODE_EFFORT
+                elif mode=='Position_Velocity':
+                    
+                        self.props["driveMode"][k] = gymapi.DOF_MODE_POS   
 
-                else:
-                        return
+            else:
+                return
 
     # Render the image 
     def render(self, mode='rbg_array', width=0, height=0):
