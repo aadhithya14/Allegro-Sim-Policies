@@ -121,7 +121,7 @@ class PinchGraspingSim(DexterityEnv):
     #Function to set camera params      
     def set_camera_params(self):
         self.camera_props = gymapi.CameraProperties()
-        self.camera_props.horizontal_fov = 35
+        self.camera_props.horizontal_fov = 100
         self.camera_props.width = 480
         self.camera_props.height = 480
         self.camera_props.enable_tensors = True
@@ -332,4 +332,7 @@ class PinchGraspingSim(DexterityEnv):
         return self.compute_observation(observation='image')
 
     
-        
+    #Get DOF count
+    def get_dof_count(self):
+        num_dofs = self.gym.get_asset_dof_count(self.asset)
+        return num_dofs 
