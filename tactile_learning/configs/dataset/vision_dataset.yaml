@@ -1,3 +1,0 @@
-_target_: tactile_learning.datasets.vision.VisionDataset
-data_path: ???
-view_num: ${vision_view_num}

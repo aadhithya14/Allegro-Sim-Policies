@@ -1,0 +1,3 @@
+_target_: allegro_sim.agents.exploration.ou_noise.OUNoise
+num_expl_steps: ${num_expl_steps}
+sigma: 0.8

@@ -1,0 +1,31 @@
+_target_: allegro_sim.agents.rl_learners.drqv2.DRQv2
+repr_dim : ???
+action_shape: 16 # To be determined in the training code
+device: ${device}
+actor: ${rl_learner.actor_cfg}
+critic: ${rl_learner.critic_cfg}
+critic_target: ${rl_learner.critic_cfg}
+critic_target_tau: 0.01
+
+stddev_schedule: 0.1
+stddev_clip: 0.1
+lr: 1e-4 
+
+separate_aug: False
+name: drqv2
+
+actor_cfg:
+  _target_: allegro_sim.agents.rl_learners.drqv2.Actor
+  action_shape: ${rl_learner.action_shape}
+  repr_dim: ${rl_learner.repr_dim}
+  #hidden_depth: 2
+  hidden_dim: 64
+
+
+critic_cfg:
+  _target_: allegro_sim.agents.rl_learners.drqv2.Critic
+  # action_shape: ???
+  action_shape: ${rl_learner.action_shape}
+  repr_dim: ${rl_learner.repr_dim}
+  hidden_dim: 64
+  feature_dim: 512

@@ -1,0 +1,3 @@
+_target_: allegro_sim.models.custom.TactileImageEncoder
+in_channels: 3
+out_dim: 64

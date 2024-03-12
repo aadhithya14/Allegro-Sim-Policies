@@ -1,0 +1,4 @@
+_target_: allegro_sim.models.custom.TactileSingleSensorEncoder
+in_channels: 3
+out_dim: 32
+# tactile_image_size = 16 was used

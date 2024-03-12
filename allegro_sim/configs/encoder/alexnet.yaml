@@ -1,0 +1,4 @@
+_target_: allegro_sim.models.pretrained.alexnet
+pretrained: true
+out_dim: 1024 # this is only for training usage
+remove_last_layer: true

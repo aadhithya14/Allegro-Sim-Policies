@@ -4,7 +4,7 @@ import glob
 import hydra 
 from omegaconf import DictConfig
 
-@hydra.main(version_base=None, config_path='tactile_learning/configs', config_name='preprocess')
+@hydra.main(version_base=None, config_path='allegro_sim/configs', config_name='preprocess')
 def main(cfg : DictConfig) -> None:
 
     # Initialize the preprocessor module

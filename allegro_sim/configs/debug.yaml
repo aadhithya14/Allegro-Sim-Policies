@@ -1,0 +1,129 @@
+mock: false
+mock_traj_id: 0
+device: cuda
+base_episode_saved_fn: 2023.05.15T16-16_end_frames_stacked_only_arm/20230515T161741_0_76 # This is a good episode - it will be used only to scale the rewards
+# episode_saved_fn: 2023.05.15T13-53_costs_summed/20230515T135356_0_76
+# episode_saved_fn: 2023.05.15T16-16_end_frames_stacked_only_arm/20230515T162456_7_76
+# episode_saved_fn: 2023.05.19T16-28_last_frames_1_se_False_endrepeat_1_one_expert_both_last_frame/20230519T163329_4_76
+episode_saved_fn: 2023.05.19T16-28_last_frames_1_se_False_endrepeat_1_one_expert_both_last_frame/20230519T162854_0_76
+
+plot_cost_matrix: False
+compare_rewards: True
+scale_rewards: False
+last_frames_to_match: [50,30,25,15,10,2]
+
+params:
+  pretrained: true
+  out_dim: 512
+  remove_last_layer: true
+
+encoder_targets:
+  # - name: resnet
+  #   type: pretrained
+  #   encoder:
+  #     _target_: allegro_sim.models.resnet18
+  #     pretrained: ???
+  #     out_dim: ???
+  #     remove_last_layer: ???
+  # - name: alexnet
+  #   type: pretrained
+  #   encoder:
+  #     _target_: allegro_sim.models.alexnet
+  #     pretrained: ???
+  #     out_dim: ???
+  #     remove_last_layer: ???
+  # - name: mobilenet
+  #   type: pretrained
+  #   encoder:
+  #     _target_: allegro_sim.models.mobilenet_v2
+  #     pretrained: ???
+  #     out_dim: ???
+  #     remove_last_layer: ???
+  # - name: densenet
+  #   type: pretrained
+  #   encoder:
+  #     _target_: allegro_sim.models.densenet_121
+  #     pretrained: ???
+  #     out_dim: ???
+  #     remove_last_layer: ???
+  # - name: googlenet
+  #   type: pretrained
+  #   encoder:
+  #     _target_: allegro_sim.models.googlenet
+  #     pretrained: ???
+  #     out_dim: ???
+  #     remove_last_layer: ???
+  # - name: squeezenet
+  #   type: pretrained
+  #   encoder:
+  #     _target_: allegro_sim.models.squeezenet
+  #     pretrained: ???
+  #     out_dim: ???
+  #     remove_last_layer: ???
+  - name: bc_model # These will be loaded by using init_encoder_info
+    type: trained
+    out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.11/13-21_bc_bs_32_epochs_500_lr_1e-05_bowl_picking_after_rss
+    # encoder:
+    #   _target_: allegro_sim.models.load_model
+    #   cfg: ???
+    #   device: ???
+    #   model_path: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.11/13-21_bc_bs_32_epochs_500_lr_1e-05_bowl_picking_after_rss/models/bc_image_encoder_best.pt
+    #   bc_model_type: image 
+
+# trained_targets:
+
+plot_all_rewards:
+  object: human_bowl_picking
+  data_path: /home/irmak/Workspace/Holo-Bot/extracted_data/${plot_all_rewards.object}
+  tactile_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.01.28/12-32_tactile_byol_bs_512_tactile_play_data_alexnet_pretrained_duration_120
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.11/13-21_bc_bs_32_epochs_500_lr_1e-05_bowl_picking_after_rss
+  # expert_demo_nums: [22,28,29,34]
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.29/19-45_bc_bs_32_epochs_500_lr_1e-05_plier_picking
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.31/21-12_temporal_ssl_bs_32_epochs_1000_lr_1e-05_card_flipping_frame_diff_8
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.31/21-20_temporal_ssl_bs_32_epochs_1000_lr_1e-05_card_flipping_frame_diff_8
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.06.02/19-41_temporal_ssl_bs_32_epochs_1000_lr_1e-05_plier_picking_frame_diff_8 # - tempoeral small enc
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.06.02/21-37_temporal_ssl_bs_32_epochs_1000_lr_1e-05_plier_picking_frame_diff_8 # temporal resnet
+  # image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.06.05/19-59_temporal_ssl_bs_32_epochs_1000_lr_1e-05_card_turning_frame_diff_5_resnet
+  image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.06.06/18-27_temporal_ssl_bs_32_epochs_1000_view_1_bowl_picking_frame_diff_5_resnet
+  expert_demo_nums: 1
+  episode_root_path: /home/aadhithya/tactile-learning/buffer
+  episode_roots:
+    - /home/aadhithya/tactile-learning/buffer/2023.06.21T12-24_bowl_unstacking_vinn_cont
+    - /home/aadhithya/tactile-learning/buffer/2023.06.20T17-14_bowl_unstacking_vinn_cont
+  human_expert: True
+  episode_frame_matches: 10 
+  expert_frame_matches: 1
+  frames_to_match: null # 10
+  match_both: null # True
+  expo_weight_init: False # This is how we initialize the beginning weight for the transport plan - TODO!
+  device: cuda:1
+  view_num: 1
+  rewards: sinkhorn_cosine
+  ssim_base_factor: 0.6
+  reward_representations: ['image']
+
+reward_changer:
+  data_path: /home/irmak/Workspace/Holo-Bot/extracted_data/bowl_picking/after_rss
+  tactile_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.01.28/12-32_tactile_byol_bs_512_tactile_play_data_alexnet_pretrained_duration_120
+  image_out_dir: /home/aadhithya/tactile-learning/allegro_sim/out/2023.05.11/13-21_bc_bs_32_epochs_500_lr_1e-05_bowl_picking_after_rss
+  expert_demo_nums: [22,24,28,29,34]
+  episode_root_path: null
+  episode_roots:
+    # - /home/aadhithya/tactile-learning/buffer/2023.05.22T16-20_last_frames_5_se_False_endrepeat_1_mfb_True_ee_False_offset_lowered
+    - /home/aadhithya/tactile-learning/buffer/mock_buffer
+  frames_to_match: 5
+  match_both: True
+  expo_weight_init: True # This is how we initialize the beginning weight for the transport plan - TODO!
+  device: cuda
+  view_num: 1
+  reward_representations: ['image']
+
+encoder_metric_calculator:
+  model_path: null
+  model_type: null
+  view_num: null 
+  encoder_fn: null
+  device: null
+
+  task_name: bowl_unstacking
+  expert_demo_nums: []

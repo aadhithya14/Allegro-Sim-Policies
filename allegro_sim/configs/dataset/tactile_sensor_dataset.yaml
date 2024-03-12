@@ -1,0 +1,3 @@
+_target_: allegro_sim.datasets.tactile.TactileSensorDataset
+data_path: ???
+normalize: False

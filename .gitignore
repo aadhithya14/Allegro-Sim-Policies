@@ -128,8 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-tactile_learning.egg-info/*
-tactile_learning/out/*
+allegro_sim.egg-info/*
+allegro_sim/out/*
 outputs/*
 wandb/*
 .vscode/*

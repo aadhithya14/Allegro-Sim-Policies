@@ -1,0 +1,3 @@
+_target_: allegro_sim.datasets.vision.VisionDataset
+data_path: ???
+view_num: ${vision_view_num}

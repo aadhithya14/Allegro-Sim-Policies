@@ -1,0 +1,22 @@
+image_out_dir: null #/home/aadhithya/tactile-learning/allegro_sim/out/2023.09.05/19-19_temporal_ssl_cube_flipping_sim_view_0
+image_model_type:  pretrained
+
+tactile_out_dir: null
+tactile_model_type: pretrained
+
+vinn_image_out_dir: null
+vinn_image_model_type: byol
+
+data_path: /home/aadhithya/Workspace/Open-Teach-v1/extracted_data/cube_flipping_sim/
+
+name: cubeflippingsim
+task_name: CubeFlippingSim-v1
+camera_num: 0
+
+expert_demo_nums: [177] # [170,171,172,173,174,175,176]
+arm_offset_scale_factor: 0.05
+hand_offset_scale_factor: 0.05
+
+offset_mask: [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0]
+
+action_type: robot

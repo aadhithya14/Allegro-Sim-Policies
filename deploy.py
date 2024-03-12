@@ -2,8 +2,8 @@ import hydra
 import torch 
 import sys
 
-from holobot_api.api import DeployAPI # This import could be changed depending on how it's used
-from holobot.utils.timer import FrequencyTimer
+from openteach_deploy_api.api import DeployAPI # This import could be changed depending on how it's used
+from openteach.utils.timer import FrequencyTimer
 from omegaconf import DictConfig
 
 class Deploy:
@@ -70,7 +70,7 @@ class Deploy:
             except KeyboardInterrupt:
                 self.module.save_deployment() # This is supposed to save all the representaitons and run things 
 
-@hydra.main(version_base=None, config_path='tactile_learning/configs', config_name='deploy')
+@hydra.main(version_base=None, config_path='allegro_sim/configs', config_name='deploy')
 def main(cfg : DictConfig) -> None:
 
     deployer = hydra.utils.instantiate(

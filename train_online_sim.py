@@ -15,13 +15,13 @@ from tqdm import tqdm
 
 from PIL import Image
 # Custom imports 
-# from tactile_learning.datasets import get_dataloaders
+# from allegro_sim.datasets import get_dataloaders
 import dexterous_env
-# from tactile_learning.learners import init_learner
-from tactile_learning.datasets import *
-from tactile_learning.environments import MockEnv
-from tactile_learning.models import *
-from tactile_learning.utils import *
+# from allegro_sim.learners import init_learner
+from allegro_sim.datasets import *
+from allegro_sim.environments import MockEnv
+from allegro_sim.models import *
+from allegro_sim.utils import *
 
 
 
@@ -435,7 +435,7 @@ class Workspace:
             episode_step += 1
             self._global_step += 1 
 
-@hydra.main(version_base=None, config_path='tactile_learning/configs', config_name='train_online')
+@hydra.main(version_base=None, config_path='allegro_sim/configs', config_name='train_online')
 def main(cfg: DictConfig) -> None:
     workspace = Workspace(cfg)
 

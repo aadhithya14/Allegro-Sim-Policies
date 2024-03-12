@@ -11,10 +11,10 @@ from omegaconf import DictConfig, OmegaConf
 from tqdm import tqdm 
 
 # Custom imports 
-from tactile_learning.datasets import get_dataloaders
-from tactile_learning.learners import init_learner
-from tactile_learning.datasets import *
-from tactile_learning.utils import *
+from allegro_sim.datasets import get_dataloaders
+from allegro_sim.learners import init_learner
+from allegro_sim.datasets import *
+from allegro_sim.utils import *
 
 class Workspace:
     def __init__(self, cfg : DictConfig) -> None:
@@ -93,7 +93,7 @@ class Workspace:
 
         pbar.close()
 
-@hydra.main(version_base=None,config_path='tactile_learning/configs', config_name = 'train_nondist')
+@hydra.main(version_base=None,config_path='allegro_sim/configs', config_name = 'train_nondist')
 def main(cfg : DictConfig) -> None:
     # We are only training everything distributedly
     assert cfg.distributed is False, "Use script only to train non-distributed"

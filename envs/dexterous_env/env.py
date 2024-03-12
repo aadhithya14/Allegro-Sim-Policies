@@ -8,15 +8,15 @@ import torch
 import torchvision.transforms as T
 
 from gym import spaces
-from holobot_api import DeployAPI
-from holobot.robot.allegro.allegro_kdl import AllegroKDL
-from holobot.utils.network import ZMQCameraSubscriber
+from openteach_deploy_api import DeployAPI
+from openteach.robot.allegro.allegro_kdl import AllegroKDL
+from openteach.utils.network import ZMQCameraSubscriber
 from PIL import Image as im
 
 
-from tactile_learning.tactile_data import TactileImage, TactileRepresentation
-from tactile_learning.models import init_encoder_info
-from tactile_learning.utils import *
+from allegro_sim.tactile_data import TactileImage, TactileRepresentation
+from allegro_sim.models import init_encoder_info
+from allegro_sim.utils import *
 
 class DexterityEnv(gym.Env):
     def __init__(

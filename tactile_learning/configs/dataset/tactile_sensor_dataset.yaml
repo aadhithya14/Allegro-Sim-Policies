@@ -1,3 +1,0 @@
-_target_: tactile_learning.datasets.tactile.TactileSensorDataset
-data_path: ???
-normalize: False

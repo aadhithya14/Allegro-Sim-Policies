@@ -1,0 +1,28 @@
+preprocessor_module:
+  _target_: allegro_sim.preprocess.preprocessor.Preprocessor
+  data_path: /home/aadhithya/Workspace/Open-Teach-v1/extracted_data/cube_flipping_sim
+  modules:
+    robot: ${robot_cfg}
+    image: ${image_cfg}
+    # tactile: ${tactile_cfg}
+  dump_data_indices: true
+  process_single_demo: false
+
+robot_cfg:
+  _target_: allegro_sim.preprocess.robot.RobotPreprocessor
+  subsample_separately: true
+  robot_names: ['allegro']
+  robot_thresholds: 
+    hand: 0.004
+    arm: 0.004 # corresponding thresholds to the robot_names
+  dump_fingertips: true
+
+image_cfg:
+  _target_: allegro_sim.preprocess.sim.SimImagePreprocessor
+  camera_id: 0
+  is_ssl: false
+  time_difference: null # If the 
+
+tactile_cfg:
+  _target_: allegro_sim.preprocess.TouchPreprocessor
+

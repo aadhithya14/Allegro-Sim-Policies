@@ -8,7 +8,7 @@ import gym
 from gym.spaces import Box
 #import torch
 import cv2
-from holobot.constants import *
+from openteach.constants import *
 from torch_utils import quat_mul, quat2mat, orientation_error,orientation_error_from_quat, axisangle2quat
 from isaacgym import gymtorch
 from isaacgym.torch_utils import *
