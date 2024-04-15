@@ -72,7 +72,7 @@ class ImagePreprocessor(PreprocessorModule):
         file_path = os.path.join(self.root, self.load_file_name)
         with open(file_path, 'rb') as f:
             image_metadata = pickle.load(f)
-            image_timestamps = np.asarray(image_metadata['timestamps']) / 1000.
+            image_timestamps = np.asarray(image_metadata['timestamps'])
 
         self.data = dict(
             timestamps = image_timestamps

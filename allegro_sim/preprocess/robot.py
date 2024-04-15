@@ -90,11 +90,11 @@ class RobotPreprocessor(PreprocessorModule):
             robot_type = MODALITY_TYPES[robot_name]
             self.robot_types.append(robot_type)
             if robot_type == 'arm':
-                self.robot_files['load']['arm'] = f'{robot_name}_cartesian_states.h5'
+                self.robot_files['load']['arm'] = f'{robot_name}_commanded_cartesian_states.h5'
                 self.robot_files['dump']['arm'] = f'{robot_name}_indices.pkl'
             elif robot_type == 'hand':
-                self.robot_files['load']['hand'] = [f'{robot_name}_joint_states.h5', f'{robot_name}_commanded_joint_states.h5'] 
-                self.robot_files['dump']['hand'] = [f'{robot_name}_indices.pkl', f'{robot_name}_action_indices.pkl']
+                self.robot_files['load']['hand'] = [f'{robot_name}_commanded_joint_states.h5'] 
+                self.robot_files['dump']['hand'] = [f'{robot_name}_action_indices.pkl']
 
         if 'hand' in self.robot_types:
             self.current_hand_id = 0
@@ -179,7 +179,9 @@ class RobotPreprocessor(PreprocessorModule):
                 with h5py.File(
                     os.path.join(self.root, self.robot_files['load'][robot_type][0]), 'r'
                 ) as f:
-                    #self.data[robot_type]['positions'] = f['commanded_positions'][()] For Sim
+                    # self.data[robot_type]['positions'] = f['commanded_positions'][()] For Sim
+                    print("filename", f)
+                    print("Keys", f.keys())
                     self.data[robot_type]['positions'] = f['positions'][()]
                     self.data[robot_type]['timestamps'] = f['timestamps'][()]
 
